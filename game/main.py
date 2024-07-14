@@ -1,6 +1,6 @@
 import threading
 import pygame
-import server.server
+import server.server as server
 import game
 
 def start_game():

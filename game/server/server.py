@@ -1,19 +1,39 @@
-from socket import *
-import server.thread_client
+import socket
+import threading
+import time
 
-host = '0.0.0.0'
-port = 5566
-server_socket = socket(AF_INET, SOCK_STREAM)
-server_socket.bind((host, port))
+class Server:
+    def __init__(self, host='0.0.0.0', port=5566):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((host, port))
+        self.server_socket.listen(5)
+        print(f"Server listening on {host}:{port}")
+        self.game_data = {}  # Shared game data
 
-print("The server is started.")
+    def handle_client(self, client_socket, client_address):
+        print(f"Connection from {client_address}")
+        try:
+            while True:
+                data = client_socket.recv(1024)
+                if not data:
+                    break
+                print(f"Received {data} from {client_address}")
+                self.modify_game_data(client_address, data)
+                response = f"Data received: {data.decode('utf-8')}"
+                client_socket.sendall(response.encode('utf-8'))
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            print(f"Connection closed from {client_address}")
+            client_socket.close()
 
-while True:
-    server_socket.listen()
-    conn, address = server_socket.accept()
-    print("Client connected")
+    def modify_game_data(self, client_address, data):
+        # Modify shared game data based on client data
+        self.game_data[client_address] = data.decode('utf-8')
+        print(f"Game data updated: {self.game_data}")
 
-    my_thread = server.thread_client.thread_client.ThreadClient(conn)
-    my_thread.start()
-
-server_socket.close()
+    def start(self):
+        while True:
+            client_socket, client_address = self.server_socket.accept()
+            client_thread = threading.Thread(target=self.handle_client, args=(client_socket, client_address))
+            client_thread.start()
