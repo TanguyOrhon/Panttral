@@ -8,7 +8,7 @@ import screen
 class Player(entity.Entity):
     def __init__(self, keylistener: keylistener.Keylistener, screen: screen.Screen) -> None:
         super().__init__(keylistener, screen)
-        self.name = PLAYER_NAME
+        self.name = PLAYER1['name']
         print(self.name)
         self.switch = [switch.Switch]
     

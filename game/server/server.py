@@ -5,7 +5,7 @@ import server.thread_client as thr
 import game
 
 class Server:
-    def __init__(self, host='0.0.0.0', port=5566):
+    def __init__(self, host='', port=5566):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((host, port))
         self.server_socket.listen(5)

@@ -4,5 +4,15 @@ HEIGHT = 720
 FPS = 60
 
 # Player settings
-PLAYER_SPEED = 5
-PLAYER_NAME = "Tanguy"
+PLAYER1 = {
+    'name': "Tanguy"
+}
+PLAYER2 = {
+    'name': ""
+}
+PLAYER3 = {
+    'name': ""
+}
+PLAYER4 = {
+    'name': ""
+}

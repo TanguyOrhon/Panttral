@@ -1,26 +1,30 @@
 from socket import *
+import time
+from settings import *
+import json
 
 class Client:
     def __init__(self) -> None:
-        self.host = '192.168.1.163'
+        self.host = 'localhost'
         self.port = 5566
 
 
     def connection(self):
-        client_socket = socket(AF_INET, SOCK_STREAM)
-        try:
-            client_socket.connect((self.host, self.port))
-            print("Connected")
+        while True:
+            client_socket = socket(AF_INET, SOCK_STREAM)
+            try:
+                client_socket.connect((self.host, self.port))
+                print("Connected")
 
-            data = client_socket.recv(1024).decode()
-            
-            settings_path = 'game/settings.py'
-            with open(settings_path, 'w') as file:
-                file.write(data)
+                data = client_socket.recv(1024).decode('utf-8')
+                player_data = json.loads(data)
+                print(player_data)
+                PLAYER1 = player_data
 
-            print("File received successfully")
+                print("File received successfully")
 
-        except Exception as e:
-            print(f"Connection refused: {e}")
-        finally:
-            client_socket.close()
+            except Exception as e:
+                print(f"Connection refused: {e}")
+            finally:
+                time.sleep(1)
+                client_socket.close()
