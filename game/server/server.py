@@ -1,5 +1,5 @@
 from socket import *
-from thread_client import ThreadClient
+import server.thread_client
 
 host = '0.0.0.0'
 port = 5566
@@ -13,7 +13,7 @@ while True:
     conn, address = server_socket.accept()
     print("Client connected")
 
-    my_thread = ThreadClient(conn)
+    my_thread = server.thread_client.thread_client.ThreadClient(conn)
     my_thread.start()
 
 server_socket.close()
