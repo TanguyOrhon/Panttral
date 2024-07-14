@@ -19,27 +19,9 @@ class Entity(pygame.sprite.Sprite) :
         self.index_image = 0
         self.animation_step_time = 0.0
         self.action_animation = 60
-
+    
     def update(self):
-        self.check_move()
         self.rect.topleft = [self.position_x, self.position_y]
-
-    def check_move(self):
-        self.animation_step_time += self.screen.get_delta_time()
-        if self.animation_step_time >= self.action_animation:
-            if self.keylistener.key_pressed(pygame.K_z):
-                self.move_up()
-            if self.keylistener.key_pressed(pygame.K_s):
-                self.move_down()
-            if self.keylistener.key_pressed(pygame.K_q):
-                self.move_left()
-            if self.keylistener.key_pressed(pygame.K_d):
-                self.move_right()
-            if self.index_image < 8 :
-                self.index_image += 1
-            else :
-                self.index_image = 0
-            self.animation_step_time = 0.0
 
     def move_left(self):
         self.position_x -= 4

@@ -1,16 +1,19 @@
 from socket import *
+from thread_client import ThreadClient
 
-host = '192.168.1.163'
+host = '0.0.0.0'
 port = 5566
-socket = socket(AF_INET, SOCK_STREAM)
-socket.bind((host, port))
+server_socket = socket(AF_INET, SOCK_STREAM)
+server_socket.bind((host, port))
 
 print("The server is started.")
 
 while True:
-    socket.listen()
-    conn, address = socket.accept()
-    print("Listening")
-    conn.close()
+    server_socket.listen()
+    conn, address = server_socket.accept()
+    print("Client connected")
 
-socket.close()
+    my_thread = ThreadClient(conn)
+    my_thread.start()
+
+server_socket.close()
