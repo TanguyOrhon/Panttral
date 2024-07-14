@@ -12,7 +12,7 @@ class Game:
         self.screen = Screen()
         self.map = Map(self.screen)
         self.keylistener = Keylistener()
-        self.player : player.Player= player.Player(self.keylistener, self.screen)
+        self.player : player.Player = player.Player(self.keylistener, self.screen)
         self.map.add_player(self.player)
 
 

@@ -1,5 +1,5 @@
 import pygame
-
+from settings import *
 import entity
 import switch
 import keylistener
@@ -8,6 +8,8 @@ import screen
 class Player(entity.Entity):
     def __init__(self, keylistener: keylistener.Keylistener, screen: screen.Screen) -> None:
         super().__init__(keylistener, screen)
+        self.name = PLAYER_NAME
+        print(self.name)
         self.switch = [switch.Switch]
     
     def update(self):

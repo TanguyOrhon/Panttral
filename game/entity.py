@@ -7,7 +7,6 @@ class Entity(pygame.sprite.Sprite) :
 
     def __init__(self, keylistener : Keylistener, screen : Screen) -> None:
         super().__init__()
-        self.name = "Tanguy"
         self.screen = screen
         self.spritesheet = pygame.image.load("assets/caracters/main_caracter.png")
         self.image = Tool.split_image(self.spritesheet, 0, 0, 64, 64)
