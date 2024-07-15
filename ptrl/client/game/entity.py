@@ -1,17 +1,16 @@
 import pygame
-from tool import Tool
-from keylistener import *
-from screen import *
+from .tool import *
+from .keylistener import *
+from .screen import *
 
 class Entity(pygame.sprite.Sprite) :
 
-    def __init__(self, keylistener : Keylistener, screen : Screen) -> None:
+    def __init__(self, data_received, keylistener : Keylistener) -> None:
         super().__init__()
-        self.screen = screen
         self.spritesheet = pygame.image.load("assets/caracters/main_caracter.png")
         self.image = Tool.split_image(self.spritesheet, 0, 0, 64, 64)
-        self.position_x = 10 
-        self.position_y = 10
+        self.position_x = data_received[0]["content"]["position_x"]
+        self.position_y = data_received[0]["content"]["position_y"]
         self.rect = pygame.Rect(0, 0, 192, 192)
         self.keylistener = keylistener
         self.all_images = self.get_all_images()

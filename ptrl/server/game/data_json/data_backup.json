@@ -1,0 +1,10 @@
+[
+    {
+        "Player_id": 1,
+        "content": {
+            "name": "Tanguy",
+            "position_x": "100",
+            "position_y": "100"
+        }
+    }
+]

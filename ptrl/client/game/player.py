@@ -1,16 +1,18 @@
 import pygame
-from settings import *
-import entity
-import switch
-import keylistener
-import screen
+import json
+from .settings import *
+from .entity import *
+from .switch import *
+from .keylistener import *
+from .screen import *
 
-class Player(entity.Entity):
-    def __init__(self, keylistener: keylistener.Keylistener, screen: screen.Screen) -> None:
-        super().__init__(keylistener, screen)
-        self.name = PLAYER1['name']
-        print(self.name)
-        self.switch = [switch.Switch]
+
+class Player(Entity):
+    def __init__(self, data_received, keylistener: Keylistener, screen: Screen) -> None:
+        super().__init__(data_received, keylistener)
+        self.name = data_received[0]["content"]["name"]
+        self.switch = [Switch]
+        self.screen = screen
     
     def update(self):
         self.check_move()
@@ -33,5 +35,5 @@ class Player(entity.Entity):
                 self.index_image = 0
             self.animation_step_time = 0.0
         
-    def add_switch(self, switches : list[switch.Switch]):
+    def add_switch(self, switches : list[Switch]):
         self.switch = switches

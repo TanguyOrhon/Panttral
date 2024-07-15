@@ -1,8 +1,8 @@
 import sqlite3
 from entity import *
-from map import Map
-from keylistener import *
-from screen import *
+from .maps import *
+from .keylistener import *
+
 
 def create_table_player(entity : Entity):
     conn = sqlite3.connect("Pantral.db")
@@ -18,8 +18,6 @@ def create_table_player(entity : Entity):
     conn.commit()
     conn.close()
 
-screen = Screen()
-map = Map(screen)
 keylistener = Keylistener()
-entity = Entity(keylistener, screen)
+entity = Entity(keylistener)
 create_table_player(entity)

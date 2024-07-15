@@ -2,18 +2,18 @@ import pygame
 import pyscroll
 import pytmx
 
-from screen import *
-import switch
-import player
+from .screen import *
+from .switch import *
+from .player import *
 
-class Map :
+class Maps :
     def __init__(self, screen : Screen) -> None:
         self.screen = screen
         self.tmx_data = None
         self.map_layer = None
         self.group = None
         self.player = None
-        self.switchs = [switch.Switch]
+        self.switchs = [Switch]
         self.switch_map("Test_map")
 
     def switch_map(self, map : str) -> None:
@@ -26,7 +26,7 @@ class Map :
 
         for obj in self.tmx_data.objects:
             if obj.properties["Type"] == "switch":
-                self.switchs.append(switch.Switch(obj.properties["Type"], obj.name, pygame.Rect(obj.x, obj.y, obj.width, obj.height), obj.properties["Port"]))
+                self.switchs.append(Switch(obj.properties["Type"], obj.name, pygame.Rect(obj.x, obj.y, obj.width, obj.height), obj.properties["Port"]))
 
 
 
@@ -35,7 +35,7 @@ class Map :
         self.group.center(self.player.rect.center)
         self.group.draw(self.screen.get_display())
 
-    def add_player(self, player : player.Player):
+    def add_player(self, player : Player):
         self.group.add(player)
         self.player = player
         self.player.add_switch(self.switchs)
