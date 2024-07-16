@@ -1,6 +1,7 @@
 import pygame
 from .tool import *
 from .keylistener import *
+import json
 
 
 class Entity(pygame.sprite.Sprite) :
@@ -17,9 +18,18 @@ class Entity(pygame.sprite.Sprite) :
         self.index_image = 0
         self.animation_step_time = 0.0
         self.action_animation = 60
+        self.filepath = "game/data_json/data_serv.json"
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as f:
+                self.data_received = json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Erreur de décodage JSON dans le fichier {self.filepath}: {e}")
+        except IOError as e:
+            raise IOError(f"Erreur de lecture du fichier {self.filepath}: {e}")
     
     def update(self):
         self.rect.topleft = [self.position_x, self.position_y]
+        self.update_json()
 
     def move_left(self):
         self.position_x -= 4
@@ -48,3 +58,9 @@ class Entity(pygame.sprite.Sprite) :
             for j, key in enumerate(all_images.keys()):
                 all_images[key].append(Tool.split_image(self.spritesheet, i * 64, j*64, 64, 64))
         return all_images
+    
+    def update_json(self):
+        self.data_received[0]["content"]["position_x"] = self.position_x
+        self.data_received[0]["content"]["position_x"] = self.position_y
+        with open(self.filepath, 'w', encoding='utf-8') as data_player:
+            json.dump(self.data_received, data_player, ensure_ascii=False, indent=4)
