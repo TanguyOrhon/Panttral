@@ -1,4 +1,8 @@
 import pygame
+import base64
+import json
+import io
+
 from .tool import *
 from .keylistener import *
 import json
@@ -62,5 +66,16 @@ class Entity(pygame.sprite.Sprite) :
     def update_json(self):
         self.data_received[0]["content"]["position_x"] = self.position_x
         self.data_received[0]["content"]["position_x"] = self.position_y
+        self.data_received[0]["content"]["surface"] = self.save_sprite_surface()
         with open(self.filepath, 'w', encoding='utf-8') as data_player:
             json.dump(self.data_received, data_player, ensure_ascii=False, indent=4)
+
+    def save_sprite_surface(self) -> str:
+        buffer = io.BytesIO()
+        pygame.image.save(self.image, buffer)
+        buffer.seek(0)
+        data = buffer.read()
+
+        # Encoder les données en base64
+        data_base64 = base64.b64encode(data).decode('utf-8')
+        return data_base64

@@ -3,7 +3,7 @@
         "Player_id": 1,
         "content": {
             "name": "Test",
-            "position_x": 1000,
+            "position_x": 100000,
             "position_y": 200
         }
     }

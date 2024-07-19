@@ -1,17 +1,21 @@
+import json
+from typing import List
+import pygame
+
 class Keylistener:
     def __init__(self) -> None:
-        self.keys = []
-
-    def add_key(self, key):
-        if key not in self.keys:
-            self.keys.append(key)
-    
-    def remove_key(self, key):
-        if key in self.keys:
-            self.keys.remove(key)
+        self.keys = self.get_keys()
 
     def key_pressed(self, key):
         return key in self.keys
+    
+    def get_keys(self) -> List[int]:
+        # Lire le fichier JSON
+        with open('game/data_json/data_get.json', 'r') as json_file:
+            json_data = json.load(json_file)
+
+        keys = json_data[0]["content"]["keys"]
+        return keys
     
     def clear(self) -> None:
         self.keys.clear()

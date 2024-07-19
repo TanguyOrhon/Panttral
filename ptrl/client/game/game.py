@@ -14,6 +14,7 @@ class Game:
         try:
             with open(self.filepath, 'r', encoding='utf-8') as f:
                 self.data_received = json.load(f)
+                f.close()
         except json.JSONDecodeError as e:
             raise ValueError(f"Erreur de décodage JSON dans le fichier {self.filepath}: {e}")
         except IOError as e:

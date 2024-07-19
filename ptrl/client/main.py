@@ -4,10 +4,10 @@ from communication.client import Client
 from game.game import Game
 import time
 
-def start_game():
-    pygame.init()
-    main_game = Game()
-    main_game.run()
+# def start_game():
+#     pygame.init()
+#     main_game = Game()
+#     main_game.run()
 
 def connect_client():
     main_client = Client()
@@ -28,8 +28,8 @@ if __name__ == "__main__":
     # Wait for a short while to ensure the client has time to start
     time.sleep(2)
 
-    game_thread = threading.Thread(target=start_game)
-    game_thread.start()
+    # game_thread = threading.Thread(target=start_game)
+    # game_thread.start()
 
-    game_thread.join()
+    # game_thread.join()
     client_thread.join()
