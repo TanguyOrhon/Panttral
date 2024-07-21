@@ -10,12 +10,18 @@ class Keylistener:
         return key in self.keys
     
     def get_keys(self) -> List[int]:
-        # Lire le fichier JSON
-        with open('game/data_json/data_get.json', 'r') as json_file:
-            json_data = json.load(json_file)
-
-        keys = json_data[0]["content"]["keys"]
+        keys = self.get_keys()
+        try:
+            with open('game/data_json/data_get.json', 'r') as json_file:
+                json_data = json.load(json_file)
+                keys = json_data["Player_1"]["content"]["keys"]
+        except:
+            pass
+        
         return keys
+    
+    def update(self):
+        self.keys = self.get_keys()
     
     def clear(self) -> None:
         self.keys.clear()

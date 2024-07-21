@@ -12,24 +12,27 @@ class Client:
         self.data_get = None
         self.image_data = None
         self.open_file()
+        self.stop_connection = False
 
     def connection(self):
         try:
             client_socket = socket(AF_INET, SOCK_STREAM)
             client_socket.connect((self.host, self.port))
             print("Client connected")
-            while True:
+            while not self.stop_connection:
                 self.get_data(client_socket)
                 self.send_data(client_socket)
                 self.handle_json_data()
+            client_socket.close()
         except Exception as e:
             print(f"Connection refused: {e}")
-        finally:
-            time.sleep(0.02)
+            pass
 
     def handle_json_data(self):
-        with open("game/data_json/data_get.json", 'r+', encoding='utf-8') as f:
-            json.dump(self.data_get, f, ensure_ascii=False, indent=4)
+        with open('game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
+            f.seek(0)
+            json.dump(self.data_get, f, indent=4)
+            f.truncate()
 
     def get_data(self, conn: socket):
             prefix = conn.recv(4)
@@ -38,9 +41,10 @@ class Client:
             elif prefix == b'IMG ':
                 self.receive_images(conn)
             else:
-                raise ValueError("Unknown data type prefix received")
+                print("Unknown data type prefix received")
             
     def send_data(self, conn: socket):
+        self.open_file_set()
         self.send_json(conn)
     
     def receive_images(self, conn):
@@ -75,31 +79,30 @@ class Client:
         if not json_data == b'':
             json_data = json_data.decode('utf-8')
             self.data_get = json.loads(json_data)
-            print(json_data)
 
-    def open_file(self) :
-        try:
-            with open("game/data_json/data_set.json", 'r', encoding='utf-8') as f:
-                self.data_set = json.load(f)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Erreur de décodage JSON dans le fichier game/data_json/data_client.json : {e}")
-        except IOError as e:
-            raise IOError(f"Erreur de lecture du fichier game/data_json/data_client.json : {e}")
-        
-        try:
-            with open("game/data_json/data_get.json", 'r') as f:
-                self.data_get = json.load(f)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Erreur de décodage JSON dans le fichier game/data_json/data_get.json : {e}")
-        except IOError as e:
-            raise IOError(f"Erreur de lecture du fichier game/data_json/data_get.json : {e}")   
-        
     def send_json(self, conn):
         json_prefix = b'JSON'
         data = json.dumps(self.data_set).encode('utf-8')
         json_size = len(data)
         conn.sendall(json_prefix + json_size.to_bytes(4, 'big') + data)
         conn.sendall(b'')
-        
 
-        
+    def open_file(self) :
+        self.open_file_set()
+        self.open_file_get()    
+
+    def open_file_get(self):
+        try:
+            with open("game/data_json/data_get.json", 'r') as f:
+                self.data_get = json.load(f)
+        except:
+            print("error")
+            pass
+
+    def open_file_set(self): 
+        try :
+            with open("game/data_json/data_set.json", 'r', encoding='utf-8') as f:
+                self.data_set = json.load(f)
+        except:
+            print("error")
+            pass

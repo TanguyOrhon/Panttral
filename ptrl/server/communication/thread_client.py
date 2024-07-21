@@ -6,7 +6,7 @@ import threading
 from typing import List
 
 class ThreadClient(Thread):
-    def __init__(self, conn: socket.socket) -> None:
+    def __init__(self, conn: socket.socket, id: int) -> None:
         super().__init__()
         self.conn = conn
         self.data_set = None        
@@ -21,6 +21,7 @@ class ThreadClient(Thread):
             self.handle_json_data()
 
     def send_data(self):
+        self.open_file_set()
         self.send_json()
 
     def send_json(self):
@@ -42,41 +43,17 @@ class ThreadClient(Thread):
                 self.receive_json()
             elif prefix == b'IMG ':
                 self.receive_images()
+            elif prefix == b'CONN':
+                self.receive_id_player()
             else:
-                raise ValueError("Unknown data type prefix received")
-
-    def open_file(self) :
-        try:
-            with open("game/data_json/data_set.json", 'r', encoding='utf-8') as f:
-                self.data_set = json.load(f)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Erreur de décodage JSON dans le fichier {self.data_player_path}: {e}")
-        except IOError as e:
-            raise IOError(f"Erreur de lecture du fichier {self.data_player_path}: {e}")
-        
-
-        
-        try:
-            with open("game/data_json/data_get.json", 'r') as data_get:
-                self.data_get = json.load(data_get)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Erreur de décodage JSON dans le fichier game/data_json/data_get.json : {e}")
-        except IOError as e:
-            raise IOError(f"Erreur de lecture du fichier game/data_json/data_get.json : {e}")
-        
-        # try:
-        #     with open(self.image_path, 'rb') as data_image:
-        #         self.image_data = data_image.read()
-        # except json.JSONDecodeError as e:
-        #     raise ValueError(f"Erreur de décodage JSON dans le fichier {self.image_path}: {e}")
-        # except IOError as e:
-            # raise IOError(f"Erreur de lecture du fichier {self.image_path}: {e}")
+               print("Unknown data type prefix received")
 
     def handle_json_data(self):
-        lock = threading.Lock()
-        with lock:
-            with open("game/data_json/data_get.json", 'r+', encoding='utf-8') as f:
-                json.dump(self.data_get, f, ensure_ascii=False, indent=4)
+            with open('game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
+                f.seek(0)
+                json.dump(self.data_get, f, indent=4)
+                f.truncate()
+
 
     def receive_json(self):
         # Réception de la taille de l'image
@@ -93,4 +70,25 @@ class ThreadClient(Thread):
         if not json_data == b'':
             json_data = json_data.decode('utf-8')
             self.data_get = json.loads(json_data)
-            print(json_data)
+
+
+    def open_file(self) :
+        self.open_file_set()
+        self.open_file_get()    
+            
+    def open_file_get(self):
+        try:
+            with open("game/data_json/data_get.json", 'r') as f:
+                self.data_get = json.load(f)
+        except:
+            print("error")
+            pass
+
+
+    def open_file_set(self):
+        try :
+            with open("game/data_json/data_set.json", 'r', encoding='utf-8') as f:
+                self.data_set = json.load(f)
+        except:
+            print("error")
+            pass

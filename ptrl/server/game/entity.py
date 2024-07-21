@@ -1,35 +1,30 @@
 import pygame
-import base64
+import pickle
 import json
-import io
+import base64
+
 
 from .tool import *
 from .keylistener import *
-import json
+from .settings import *
 
 
 class Entity(pygame.sprite.Sprite) :
 
     def __init__(self, keylistener : Keylistener) -> None:
         super().__init__()
+        self.json_data_get = JSON_DATA_GET
+        self.json_data_set = JSON_DATA_SET
         self.spritesheet = pygame.image.load("assets/caracters/main_caracter.png")
-        self.image = Tool.split_image(self.spritesheet, 0, 0, 64, 64)
         self.position_x = 10 
         self.position_y = 10
         self.rect = pygame.Rect(0, 0, 192, 192)
         self.keylistener = keylistener
         self.all_images = self.get_all_images()
         self.index_image = 0
+        self.image = self.all_images["right"][self.index_image]
         self.animation_step_time = 0.0
         self.action_animation = 60
-        self.filepath = "game/data_json/data_serv.json"
-        try:
-            with open(self.filepath, 'r', encoding='utf-8') as f:
-                self.data_received = json.load(f)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Erreur de décodage JSON dans le fichier {self.filepath}: {e}")
-        except IOError as e:
-            raise IOError(f"Erreur de lecture du fichier {self.filepath}: {e}")
     
     def update(self):
         self.rect.topleft = [self.position_x, self.position_y]
@@ -64,18 +59,15 @@ class Entity(pygame.sprite.Sprite) :
         return all_images
     
     def update_json(self):
-        self.data_received[0]["content"]["position_x"] = self.position_x
-        self.data_received[0]["content"]["position_x"] = self.position_y
-        self.data_received[0]["content"]["surface"] = self.save_sprite_surface()
-        with open(self.filepath, 'w', encoding='utf-8') as data_player:
-            json.dump(self.data_received, data_player, ensure_ascii=False, indent=4)
+        self.json_data_set["Player_1"]["content"]["position_x"] = self.position_x
+        self.json_data_set["Player_1"]["content"]["position_y"] = self.position_y
+        self.json_data_set["Player_1"]["content"]["surface"] = self.save_sprite_surface()
+        with open("game/data_json/data_set.json", 'r+', encoding='utf-8') as f:
+            f.seek(0)
+            json.dump(self.json_data_set, f, ensure_ascii=False, indent=4)
+            f.truncate()
 
     def save_sprite_surface(self) -> str:
-        buffer = io.BytesIO()
-        pygame.image.save(self.image, buffer)
-        buffer.seek(0)
-        data = buffer.read()
-
-        # Encoder les données en base64
-        data_base64 = base64.b64encode(data).decode('utf-8')
-        return data_base64
+        image_string = pygame.image.tostring(self.image, 'RGBA')
+        image_base64 = base64.b64encode(image_string).decode('utf-8')
+        return image_base64
