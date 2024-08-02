@@ -1,6 +1,7 @@
 import json
 from typing import List
 import pygame
+from .settings import *
 
 class Keylistener:
     def __init__(self) -> None:
@@ -10,14 +11,8 @@ class Keylistener:
         return key in self.keys
     
     def get_keys(self) -> List[int]:
-        keys = self.get_keys()
-        try:
-            with open('game/data_json/data_get.json', 'r') as json_file:
-                json_data = json.load(json_file)
-                keys = json_data["Player_1"]["content"]["keys"]
-        except:
-            pass
-        
+
+        keys = JSON_DATA_GET["Player_2"]["content"]["keys"]
         return keys
     
     def update(self):

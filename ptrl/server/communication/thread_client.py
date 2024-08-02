@@ -50,8 +50,10 @@ class ThreadClient(Thread):
 
     def handle_json_data(self):
             with open('game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
+                data = json.load(f)
+                data[f"Player_{self.data_get['Player']['Player_id']}"]=self.data_get['Player']
                 f.seek(0)
-                json.dump(self.data_get, f, indent=4)
+                json.dump(data, f, indent=4)
                 f.truncate()
 
 

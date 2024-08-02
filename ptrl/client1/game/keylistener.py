@@ -21,7 +21,7 @@ class Keylistener:
         self.keys.clear()
     
     def update(self):
-        self.json_data_set["Player_1"]["content"]["keys"] = self.keys
+        self.json_data_set["Player"]["content"]["keys"] = self.keys
         try :
             with open('game/data_json/data_set.json', 'r+', encoding='utf-8') as f:
                 f.seek(0)
