@@ -6,13 +6,14 @@ import threading
 from typing import List
 
 class ThreadClient(Thread):
-    def __init__(self, conn: socket.socket, id: int) -> None:
+    def __init__(self, conn: socket.socket, id_: int) -> None:
         super().__init__()
         self.conn = conn
         self.data_set = None        
         self.data_get = None
         self.image_data = None
         self.open_file()
+        self.id = id_
 
     def run(self) -> None:
         while True:
@@ -43,17 +44,13 @@ class ThreadClient(Thread):
                 self.receive_json()
             elif prefix == b'IMG ':
                 self.receive_images()
-            elif prefix == b'CONN':
-                self.receive_id_player()
             else:
                print("Unknown data type prefix received")
 
     def handle_json_data(self):
-            with open('game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
-                data = json.load(f)
-                data[f"Player_{self.data_get['Player']['Player_id']}"]=self.data_get['Player']
+            with open(f'game/data_json/data_get_{self.id}.json', 'r+', encoding='utf-8') as f:
                 f.seek(0)
-                json.dump(data, f, indent=4)
+                json.dump(self.data_get, f, indent=4)
                 f.truncate()
 
 
@@ -94,3 +91,4 @@ class ThreadClient(Thread):
         except:
             print("error")
             pass
+

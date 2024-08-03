@@ -15,7 +15,8 @@ class Server:
             while True:
                 conn, address = self.server_socket.accept()
                 print('Connected by', address)
-                my_thread = ThreadClient(conn, id = len(self.active_threads)+1)
+                id_ = self.receive_conn(conn)
+                my_thread = ThreadClient(conn, id_)
                 my_thread.start()
                 self.active_threads.append(my_thread)
                 self.clean_threads()
@@ -29,3 +30,12 @@ class Server:
         """Clean up the list of active threads by removing the ones that have stopped."""
         self.active_threads = [t for t in self.active_threads if t.is_alive()]
         print(f"Active threads: {len(self.active_threads)}")
+
+    def receive_conn(self, conn: socket) -> int:
+        id_ = None
+        prefix = conn.recv(4)
+        if prefix == b'ID  ':
+            id_ = int.from_bytes(conn.recv(1), 'big')
+        if id_ == 0:
+            id_ = 1
+        return id_

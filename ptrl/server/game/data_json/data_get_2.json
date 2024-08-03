@@ -1,0 +1,11 @@
+{
+    "Player": {
+        "Player_id": 1,
+        "content": {
+            "name": "Test",
+            "position_x": 10,
+            "position_y": 10,
+            "keys": []
+        }
+    }
+}
