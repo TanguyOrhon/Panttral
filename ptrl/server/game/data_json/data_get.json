@@ -1,5 +1,4 @@
 {
-    "nb_player": 0,
     "Player_1": {
         "Player_id": 1,
         "content": {
@@ -16,7 +15,8 @@
             "position_x": 100,
             "position_y": 100,
             "keys": [
-                100]
-            }
+                100
+            ]
         }
     }
+}
