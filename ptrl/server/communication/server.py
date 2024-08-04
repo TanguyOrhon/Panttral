@@ -49,6 +49,7 @@ class Server:
             self.data_settings["nb_players"] += 1
             id_ = self.data_settings["nb_players"]
             print(f"new client : id = {id_}")
+            self.create_client_json(id_)
         else:
             print(f"id client = {id_}")
         return id_
@@ -71,6 +72,7 @@ class Server:
     
     def handle_json_data(self):
         while True:
+            print(self.data_get)
             try :
                 with open(f'game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
                     f.seek(0)
@@ -80,6 +82,7 @@ class Server:
                 print("error")
                 pass
             self.clean_threads()
+            self.update_data_get()
 
     def handle_json_settings(self):
             try :
@@ -91,6 +94,19 @@ class Server:
                 print("error")
                 pass
     
+    def update_data_get(self):
+        data_players = []
+        for i in self.data_settings["active_players"]:
+            if not i == None:
+                try :
+                    with open(f'game/data_json/data_get_{i}.json', 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                        data_players.append(data["Player"])
+                except:
+                    print("error")
+                    pass
+        self.data_get["Players"] = data_players
+    
     def start_json_updater(self):
         """Start a separate thread to update JSON data."""
         updater_thread = threading.Thread(target=self.handle_json_data, daemon=True)
@@ -99,3 +115,13 @@ class Server:
     def send_id(self, conn, id_):
         id_prefix = b'ID  '
         conn.sendall(id_prefix + id_.to_bytes())
+
+    def create_client_json(self, id_):
+        data = {}
+        json_data = json.dumps(data, indent=4)
+        try :
+            with open(f'game/data_json/data_get_{id_}.json', 'w', encoding='utf-8') as f:
+                json.dump(json_data, f, indent=4)
+        except:
+            print("error")
+            pass

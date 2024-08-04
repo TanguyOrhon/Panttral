@@ -1,6 +1,6 @@
 {
     "Player": {
-        "Player_id": 1,
+        "Player_id": 0,
         "content": {
             "name": "Test",
             "position_x": 10,

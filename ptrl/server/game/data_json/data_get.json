@@ -1,20 +1,3 @@
 {
-    "Player_1": {
-        "Player_id": 1,
-        "content": {
-            "name": "Test",
-            "position_x": 10,
-            "position_y": 10,
-            "keys": []
-        }
-    },
-    "Player_2": {
-        "Player_id": 2,
-        "content": {
-            "name": "Test",
-            "position_x": 100,
-            "position_y": 100,
-            "keys": []
-        }
-    }
+    "Players": []
 }

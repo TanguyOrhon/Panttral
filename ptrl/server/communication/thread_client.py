@@ -78,15 +78,6 @@ class ThreadClient(Thread):
 
     def open_file(self) :
         self.open_file_set()
-        self.open_file_get()    
-            
-    def open_file_get(self):
-        try:
-            with open("game/data_json/data_get.json", 'r') as f:
-                self.data_get = json.load(f)
-        except:
-            print("error")
-            pass
 
 
     def open_file_set(self):
