@@ -19,14 +19,12 @@ class Server:
         try:
             while True:
                 conn, address = self.server_socket.accept()
-                print('Connected by', address)
+                print('Connection from', address)
                 id_ = self.receive_conn(conn)
                 self.send_id(conn, id_)
                 my_thread = ThreadClient(conn, id_)
                 my_thread.start()
                 self.active_threads.append(my_thread)
-                self.clean_threads()
-                self.handle_json_settings()
         except KeyboardInterrupt:
             print("Server shutting down...")
         finally:
@@ -36,7 +34,11 @@ class Server:
     def clean_threads(self):
         """Clean up the list of active threads by removing the ones that have stopped."""
         self.active_threads = [t for t in self.active_threads if t.is_alive()]
-        print(f"Active threads : {len(self.active_threads)}")
+        if len(self.active_threads) !=  self.data_settings["nb_active_players"]:
+            self.data_settings["nb_active_players"] = len(self.active_threads)
+            self.data_settings["active_players"] = [t.id for t in self.active_threads]
+            self.handle_json_settings()
+            print(f"Active threads : {len(self.active_threads)}")
 
     def receive_conn(self, conn: socket) -> int:
         id_ = None
@@ -44,8 +46,8 @@ class Server:
         if prefix == b'ID  ':
             id_ = int.from_bytes(conn.recv(1), 'big')
         if id_ == 0:
-            self.data_settings["nb_player"] += 1
-            id_ = self.data_settings["nb_player"]
+            self.data_settings["nb_players"] += 1
+            id_ = self.data_settings["nb_players"]
             print(f"new client : id = {id_}")
         else:
             print(f"id client = {id_}")
@@ -77,6 +79,7 @@ class Server:
             except:
                 print("error")
                 pass
+            self.clean_threads()
 
     def handle_json_settings(self):
             try :

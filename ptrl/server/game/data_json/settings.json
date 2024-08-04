@@ -1,3 +1,6 @@
 {
-    "nb_player": 1
+    "nb_players": 1,
+    "nb_active_players": 0,
+    "players_connected": [],
+    "active_players": []
 }
