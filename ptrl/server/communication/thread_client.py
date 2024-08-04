@@ -14,10 +14,11 @@ class ThreadClient(Thread):
         self.image_data = None
         self.open_file()
         self.id = id_
+        self.running = True
 
     def run(self) -> None:
-        while True:
-            self.send_data()
+        while self.running:
+            self.send_data()            
             self.get_data()
             self.handle_json_data()
 
@@ -44,6 +45,10 @@ class ThreadClient(Thread):
                 self.receive_json()
             elif prefix == b'IMG ':
                 self.receive_images()
+            elif prefix == b'CLS ':
+                self.conn.close()
+                self.running = False
+                print(f"client {self.id} disconnected")
             else:
                print("Unknown data type prefix received")
 

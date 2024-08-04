@@ -36,7 +36,7 @@ class Server:
     def clean_threads(self):
         """Clean up the list of active threads by removing the ones that have stopped."""
         self.active_threads = [t for t in self.active_threads if t.is_alive()]
-        print(f"Active threads: {len(self.active_threads)}")
+        print(f"Active threads : {len(self.active_threads)}")
 
     def receive_conn(self, conn: socket) -> int:
         id_ = None
@@ -46,6 +46,9 @@ class Server:
         if id_ == 0:
             self.data_settings["nb_player"] += 1
             id_ = self.data_settings["nb_player"]
+            print(f"new client : id = {id_}")
+        else:
+            print(f"id client = {id_}")
         return id_
 
     def open_file_get(self):
