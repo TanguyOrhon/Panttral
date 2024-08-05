@@ -7,17 +7,12 @@ from .tool import *
 from .keylistener import *
 from .settings import *
 
-# Assuming JSON_DATA_SET is a global dictionary containing player data
-JSON_DATA_SET = {
-    "Players": {}
-}
-
 class Entity(pygame.sprite.Sprite):
 
     def __init__(self, id_: int) -> None:
         super().__init__()
         self.json_data_get = None
-        self.json_data_set = JSON_DATA_SET["Players"]
+        self.json_data_set = {"content":{}}
         self.id = id_
         self.spritesheet = pygame.image.load("assets/caracters/main_caracter.png")
         self.position_x = 10 
@@ -28,8 +23,6 @@ class Entity(pygame.sprite.Sprite):
         self.image = self.all_images["right"][self.index_image]
         self.animation_step_time = 0.0
         self.action_animation = 60
-        # Ensure JSON data is created during initialization
-        self.create_json_data()
     
     def update(self):
         self.rect.topleft = [self.position_x, self.position_y]
@@ -74,49 +67,7 @@ class Entity(pygame.sprite.Sprite):
         self.json_data_set["content"]["position_y"] = self.position_y
         self.json_data_set["content"]["surface"] = self.save_sprite_surface()
 
-    def create_json_data(self):
-        # Ensure the player data structure is initialized correctly
-        player_key = f"player_{self.id}"
-
-        # Check if the player is already in the JSON_DATA_SET
-        if player_key not in self.json_data_set:
-            # Initialize player data with default values
-            self.json_data_set[player_key] = {
-                "content": {
-                    "position_x": self.position_x,
-                    "position_y": self.position_y,
-                    "surface": self.save_sprite_surface()
-                }
-            }
-            # Write the updated JSON_DATA_SET to the file
-            try:
-                with open('game/data_json/data_set.json', 'r+', encoding='utf-8') as f:
-                    # Load existing data from the file
-                    try:
-                        existing_data = json.load(f)
-                    except json.JSONDecodeError:
-                        print("zeiuhf")
-                        existing_data = {"Players": {}}
-
-                    # Update existing data with new player data
-                    existing_data["Players"].update(self.json_data_set)
-
-                    # Move the file cursor to the start and write the updated data
-                    f.seek(0)
-                    json.dump(existing_data, f, indent=4)
-                    f.truncate()
-            except Exception as e:
-                print(f"An error occurred while updating the JSON file: {e}")
-
-        # Set self.json_data_set to reference the specific player's data
-        self.json_data_set = self.json_data_set[player_key]
-
     def get_json_data(self, data):
         player_key = f"player_{self.id}"
-
-        # Wait until the player data is available in the JSON structure
-        while player_key not in data["Players"]:
-            time.sleep(0.1)
-
         self.json_data_get = data["Players"][player_key]
 

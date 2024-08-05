@@ -11,7 +11,6 @@ class Player(Entity):
         self.keylistener = keylistener
     
     def update(self):
-        print("test")
         self.keylistener.get_keys(self.json_data_get)
         self.check_move()
         super().update()
@@ -19,6 +18,7 @@ class Player(Entity):
     def check_move(self):
         # self.animation_step_time += self.screen.get_delta_time()
         # if self.animation_step_time >= self.action_animation:
+
         if self.keylistener.key_pressed(pygame.K_z):
             self.move_up()
         if self.keylistener.key_pressed(pygame.K_s):
