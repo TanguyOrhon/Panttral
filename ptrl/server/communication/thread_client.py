@@ -18,9 +18,14 @@ class ThreadClient(Thread):
 
     def run(self) -> None:
         while self.running:
-            self.send_data()            
-            self.get_data()
-            self.handle_json_data()
+            try :
+                self.send_data()            
+                self.get_data()
+                self.handle_json_data()
+            except :
+                self.conn.close()
+                self.running = False
+
 
     def send_data(self):
         self.open_file_set()

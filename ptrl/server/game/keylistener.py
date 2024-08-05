@@ -5,18 +5,14 @@ from .settings import *
 
 class Keylistener:
     def __init__(self) -> None:
-        self.keys = self.get_keys()
+        self.keys = []
 
     def key_pressed(self, key):
         return key in self.keys
     
-    def get_keys(self) -> List[int]:
-
-        keys = JSON_DATA_GET["Player_2"]["content"]["keys"]
-        return keys
-    
-    def update(self):
-        self.keys = self.get_keys()
+    def get_keys(self, data_get):
+        self.keys = data_get["content"]["keys"]
+        print(self.keys)
     
     def clear(self) -> None:
         self.keys.clear()

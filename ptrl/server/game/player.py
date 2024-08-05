@@ -6,10 +6,13 @@ from .keylistener import *
 
 
 class Player(Entity):
-    def __init__(self, keylistener: Keylistener) -> None:
-        super().__init__(keylistener)
+    def __init__(self, keylistener : Keylistener, id_ : int) -> None:
+        super().__init__(id_)
+        self.keylistener = keylistener
     
     def update(self):
+        print("test")
+        self.keylistener.get_keys(self.json_data_get)
         self.check_move()
         super().update()
 

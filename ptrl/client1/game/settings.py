@@ -1,6 +1,6 @@
 import json
 TITLE = "Panttral"
-PLAYER = "Player_1"
+PLAYER = "player_1"
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60

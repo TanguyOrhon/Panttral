@@ -148,6 +148,5 @@ class Client:
     def close_socket(self, conn):
         id_prefix = b'CLS '
         conn.sendall(id_prefix)
-        time.sleep(2)
         conn.close()
         print("disconnected")

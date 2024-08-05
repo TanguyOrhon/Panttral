@@ -1,4 +1,5 @@
 import socket
+import time
 from .thread_client import *
 
 
@@ -37,7 +38,6 @@ class Server:
         if len(self.active_threads) !=  self.data_settings["nb_active_players"]:
             self.data_settings["nb_active_players"] = len(self.active_threads)
             self.data_settings["active_players"] = [t.id for t in self.active_threads]
-            self.handle_json_settings()
             print(f"Active threads : {len(self.active_threads)}")
 
     def receive_conn(self, conn: socket) -> int:
@@ -72,7 +72,6 @@ class Server:
     
     def handle_json_data(self):
         while True:
-            print(self.data_get)
             try :
                 with open(f'game/data_json/data_get.json', 'r+', encoding='utf-8') as f:
                     f.seek(0)
@@ -81,9 +80,11 @@ class Server:
             except:
                 print("error")
                 pass
-            self.clean_threads()
+            self.clean_threads()            
             self.update_data_get()
+            self.handle_json_settings()
 
+            
     def handle_json_settings(self):
             try :
                 with open(f'game/data_json/settings.json', 'r+', encoding='utf-8') as f:
@@ -95,13 +96,13 @@ class Server:
                 pass
     
     def update_data_get(self):
-        data_players = []
+        data_players = {}
         for i in self.data_settings["active_players"]:
             if not i == None:
                 try :
                     with open(f'game/data_json/data_get_{i}.json', 'r', encoding='utf-8') as f:
                         data = json.load(f)
-                        data_players.append(data["Player"])
+                        data_players[f"player_{i}"] = data
                 except:
                     print("error")
                     pass

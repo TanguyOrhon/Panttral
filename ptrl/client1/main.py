@@ -7,15 +7,13 @@ from game import settings
 
 def main():
     
-    name = input("Player : ")
-    settings.PLAYER = name
     main_client = Client()
 
     client_thread = threading.Thread(target=connect_client, args=(main_client,))
     client_thread.start()
 
     # Wait for a short while to ensure the client has time to start
-    time.sleep(2)
+    time.sleep(4)
     game_thread = threading.Thread(target=start_game, args=(main_client,))
     game_thread.start()
 
